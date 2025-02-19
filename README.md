@@ -13,7 +13,6 @@
 
 - Python 3
 - Selenium
-- macOS
 
 ## START
 
