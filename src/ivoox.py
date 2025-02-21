@@ -62,7 +62,14 @@ def upload_to_ivoox(file_path: str, title: str):
 
     sleep(2)
     click_button_by_text(driver, "Continue",5)
-    click_button_by_xpath(driver, '//*[@id="accept-conditions"]', 1)
+
+    print('<!> Executing JS.for checkbox clicking..');
+    driver.execute_script('''
+                          var el = document.getElementById('accept-conditions');
+                          el.click();
+                          ''')
+
+    sleep(1)
     click_button_by_text(driver, "Publish",5)
 
 
