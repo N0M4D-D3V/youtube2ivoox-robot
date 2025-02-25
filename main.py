@@ -1,3 +1,4 @@
+from src.file_operations import remove_files
 from src.logger import print_header
 from src.ivoox import upload_to_ivoox
 from src.history import load_history, save_history
@@ -24,6 +25,8 @@ def main():
         upload_to_ivoox(file_name, title)
         history.append(url)
         save_history(history)
+
+        remove_files('./', "*.mp3")
 
 if __name__ == "__main__":
     print_header()
