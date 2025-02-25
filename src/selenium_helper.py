@@ -4,7 +4,7 @@ from selenium.webdriver.common.by import By
 def click_button_by_text(driver, button_text, sleep_time=2, shouldPass = False):
     try:
         print(f'<!> Looking for "{button_text}" BTN ...')
-        el = driver.find_element(By.XPATH, f'//button[contains(text(), "{button_text}")]')
+        el = driver.find_element(By.XPATH, f'//button[contains(., "{button_text}")]')
         el.click()
         sleep(sleep_time)
     except:
@@ -41,6 +41,15 @@ def check_navigation(driver, keyword):
 def fill_input_by_xpath(driver, xpath, value, sleep_time=1):
     try:
         el = driver.find_element(By.XPATH, xpath)
+        el.send_keys(value)
+        sleep(sleep_time)
+    except:
+        driver.quit()
+        raise Exception('<!> Could not fill input')
+    
+def fill_input_by_placeholder(driver, placeholder, value, sleep_time=1):
+    try:
+        el = driver.find_element(By.XPATH, f"//input[@placeholder='{placeholder}']")
         el.send_keys(value)
         sleep(sleep_time)
     except:

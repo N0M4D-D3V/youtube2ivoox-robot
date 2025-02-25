@@ -8,7 +8,7 @@ from src.selenium_helper import click_button_by_xpath
 def get_latest_video_URL():
     print('<!> Loading webdriver and URL ...')
     driver = webdriver.Chrome()
-    driver.get(YT_CHANNEL_URL + '/videos')
+    driver.get(YT_CHANNEL_URL)
     sleep(5)
 
     click_button_by_xpath(driver, '//button[span[text()="Reject all"]]', 5, True)
