@@ -10,5 +10,5 @@ def remove_files(directory, regex):
     mp3_files = glob.glob(os.path.join(directory, regex))
     for file in mp3_files:
         os.remove(file)
-        print(f"Removed: {file}")
+        
     return len(mp3_files)

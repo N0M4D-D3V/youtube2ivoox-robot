@@ -43,7 +43,7 @@ def upload_to_ivoox(file_path: str, title: str):
         print('<!> Uploading file ...')
         _file_input_el = driver.find_element(By.XPATH, '//input[@type="file"]')
         _file_input_el.send_keys(os.path.abspath(file_path))
-        sleep(20)
+        sleep(100)
     except:
         driver.quit()
         raise Exception('<!> Could not upload the file!')
@@ -68,7 +68,7 @@ def upload_to_ivoox(file_path: str, title: str):
                           ''')
 
     sleep(1)
-    click_button_by_text(driver, "Publish",5)
+    click_button_by_text(driver, "Publish", 10)
 
 
     driver.quit()
