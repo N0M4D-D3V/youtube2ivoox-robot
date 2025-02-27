@@ -25,6 +25,7 @@ def get_latest_video_URL():
             url = video_el.get_attribute('href')
             title = title_el.text
 
+            print(f'[Y2I Robot] Video: {title}')
             dataset.append({'title': title, 'url': url})
         except:
             raise Exception(f'[Y2I Robot] Latest video not found for "{url}"!')

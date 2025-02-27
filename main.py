@@ -5,15 +5,16 @@ from src.youtube import get_latest_video_URL
 from src.audio_ops import download_audio
 
 def main():
-    dataset = get_latest_video_URL()
-    if dataset.len > 0:
+    videoList = get_latest_video_URL()
 
-        for data in dataset:
-            file_name = download_audio(data.url, data.title)
-            dataset["file_name"] = file_name
+    if len(videoList) > 0:
+
+        for video in videoList:
+            file_name = download_audio(video["url"], video["title"])
+            video["file_name"] = file_name
         
-        upload_to_ivoox(dataset)
-        remove_files('./', "*.mp3")
+        upload_to_ivoox(videoList)
+        # remove_files('./', "*.mp3")
 
 
 if __name__ == "__main__":

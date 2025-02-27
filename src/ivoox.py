@@ -22,10 +22,10 @@ def upload_to_ivoox(dataset):
     click_button_by_text(driver, 'Understood')
 
     for data in dataset:
-        isUrlInHistory = data.url in history;
+        isUrlInHistory = data['url'] in history;
         if not isUrlInHistory:
             print('[Y2I Robot] This video URL is stored in history file. Aborting script execution ...')
-            file_path = os.path.abspath(data.file_path)
+            file_path = os.path.abspath(data['file_name'])
             click_button_by_xpath(driver, '//*[@id="content"]/div/div[2]/div/div[2]/a', 5)
         
             check_navigation(driver, 'upload')
@@ -42,7 +42,7 @@ def upload_to_ivoox(dataset):
                 continue
         
             # fill form
-            fill_input_by_xpath(driver, '/html/body/div[2]/div/div/div[2]/div/div[2]/form/div[2]/div[2]/div/div[1]/div/div/div/input', data.title, 0)
+            fill_input_by_xpath(driver, '/html/body/div[2]/div/div/div[2]/div/div[2]/form/div[2]/div[2]/div/div[1]/div/div/div/input', data['title'], 0)
             fill_input_by_xpath(driver, '/html/body/div[2]/div/div/div[2]/div/div[2]/form/div[2]/div[2]/div/div[2]/div/div/div/textarea', DESCRIPTION, 0)
 
             # Insert TAGS
@@ -63,9 +63,9 @@ def upload_to_ivoox(dataset):
             sleep(1)
             click_button_by_text(driver, "Publish", 10)
 
-            history.append(data.url)
+            history.append(data['url'])
         else:
-            print('[Y2I Robot] Video URL not stored in history file. Script can continue!')
+            print(f'[Y2I Robot] Video URL stored in history! This video was uploaded previously: {data['title']}')
 
     driver.quit()
     save_history(history)
