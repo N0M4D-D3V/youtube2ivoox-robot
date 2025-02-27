@@ -1,7 +1,7 @@
 import subprocess
 
 def download_audio(url: str, title: str) -> str:
-    print('<!> Downloading audio ...')
+    print('[Y2I Robot] Downloading audio ...')
 
     sanitized_title = "".join([c if c.isalnum() else "_" for c in title])
     file_name = f"{sanitized_title}.mp3"
