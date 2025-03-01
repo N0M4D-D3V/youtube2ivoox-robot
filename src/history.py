@@ -10,7 +10,7 @@ def load_history():
             return json.load(file)
     return []
 
-def save_history(registro):
+def save_history(history):
     print('[Y2I Robot] Saving history ...')
-    with open(HISTORY_PATH, 'w') as file:
-        json.dump(registro, file, indent=4)
+    with open(HISTORY_PATH, 'w', encoding='utf-8') as file:
+        json.dump(history, file, ensure_ascii=False, indent=4)

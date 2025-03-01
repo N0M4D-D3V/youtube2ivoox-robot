@@ -5,7 +5,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from time import sleep
 
-from setup import DESCRIPTION, IVX_USERNAME, IVX_PASS, IVX_MAIN_URL, TAGS
+from setup import IVX_USERNAME, IVX_PASS, IVX_MAIN_URL, TAGS
 from src.history import load_history, save_history
 from src.selenium_helper import check_navigation, click_button_by_text, click_button_by_xpath, fill_input_by_placeholder, fill_input_by_xpath
 
@@ -17,14 +17,18 @@ def upload_to_ivoox(dataset):
     sleep(5)
 
     login(driver)
-    
-    check_navigation(driver, 'dashboard')
-    click_button_by_text(driver, 'Understood')
 
     for data in dataset:
-        isUrlInHistory = data['url'] in history;
+        isUrlInHistory = data['link'] in history;
         if not isUrlInHistory:
-            print('[Y2I Robot] This video URL is stored in history file. Aborting script execution ...')
+            print('[Y2I Robot] This video URL is not stored in history file. Running upload...')
+            
+            # touch dashboard btn in top menu
+            click_button_by_xpath(driver, '/html/body/div[2]/div/div/div[1]/header/div/div/ul/li[1]/a', shouldPass=True)
+
+            check_navigation(driver, 'dashboard')
+            click_button_by_text(driver, 'Understood', shouldPass=True)
+
             file_path = os.path.abspath(data['file_name'])
             click_button_by_xpath(driver, '//*[@id="content"]/div/div[2]/div/div[2]/a', 5)
         
@@ -43,7 +47,7 @@ def upload_to_ivoox(dataset):
         
             # fill form
             fill_input_by_xpath(driver, '/html/body/div[2]/div/div/div[2]/div/div[2]/form/div[2]/div[2]/div/div[1]/div/div/div/input', data['title'], 0)
-            fill_input_by_xpath(driver, '/html/body/div[2]/div/div/div[2]/div/div[2]/form/div[2]/div[2]/div/div[2]/div/div/div/textarea', DESCRIPTION, 0)
+            fill_input_by_xpath(driver, '/html/body/div[2]/div/div/div[2]/div/div[2]/form/div[2]/div[2]/div/div[2]/div/div/div/textarea', data['description'], 0)
 
             # Insert TAGS
             tag_input_xpath = '/html/body/div[2]/div/div/div[2]/div/div[2]/form/div[2]/div[2]/div/div[5]/div/div/div[1]/div[2]/input'
@@ -63,7 +67,7 @@ def upload_to_ivoox(dataset):
             sleep(1)
             click_button_by_text(driver, "Publish", 10)
 
-            history.append(data['url'])
+            history.append(data['link'])
         else:
             print(f'[Y2I Robot] Video URL stored in history! This video was uploaded previously: {data['title']}')
 
