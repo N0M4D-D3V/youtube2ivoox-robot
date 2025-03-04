@@ -7,13 +7,14 @@ from time import sleep
 
 from setup import IVX_USERNAME, IVX_PASS, IVX_MAIN_URL, TAGS
 from src.history import load_history, save_history
+from src.logger import log
 from src.selenium_helper import check_navigation, click_button_by_text, click_button_by_xpath, fill_input_by_placeholder, fill_input_by_xpath
 
 def upload_to_ivoox(dataset):
     history = load_history()
     filtered_data = filterDataset(dataset, history)
     if len(filtered_data) == 0:
-        print('[Y2I Robot] All dataset is stored on history.json. Passing upload process...')
+        log('All dataset is stored on history.json. Passing upload process...')
         pass
     
     driver = webdriver.Chrome()
@@ -25,7 +26,7 @@ def upload_to_ivoox(dataset):
     for data in filtered_data :
         isUrlInHistory = data['link'] in history;
         if not isUrlInHistory:
-            print('[Y2I Robot] This video URL is not stored in history file. Running upload...')
+            log('This video URL is not stored in history file. Running upload...')
             
             # touch dashboard btn in top menu
             click_button_by_xpath(driver, '/html/body/div[2]/div/div/div[1]/header/div/div/ul/li[1]/a', shouldPass=True)
@@ -41,12 +42,12 @@ def upload_to_ivoox(dataset):
 
             # Locate the file input field and upload the file
             try:
-                print('[Y2I Robot] Uploading file ...')
+                log('Uploading file ...')
                 _file_input_el = driver.find_element(By.XPATH, '//input[@type="file"]')
                 _file_input_el.send_keys(os.path.abspath(file_path))
                 sleep(100)
             except:
-                print('[Y2I Robot] Could not upload the file!')
+                log('Could not upload the file!')
                 continue
         
             # fill form
@@ -62,7 +63,7 @@ def upload_to_ivoox(dataset):
             sleep(2)
             click_button_by_text(driver, "Continue",5)
 
-            print('[Y2I Robot] Executing JS.for checkbox clicking..');
+            print('Executing JS.for checkbox clicking..');
             driver.execute_script('''
                                 var el = document.getElementById('accept-conditions');
                                 el.click();
@@ -73,29 +74,29 @@ def upload_to_ivoox(dataset):
 
             history.append(data['link'])
         else:
-            print(f'[Y2I Robot] Video URL stored in history! This video was uploaded previously: {data['title']}')
+            log(f'Video URL stored in history! This video was uploaded previously: {data['title']}')
 
     driver.quit()
     save_history(history)
 
 def login(driver):
     # close modals and other trash
-    print('[Y2I Robot] Closing trash modals ...')
+    log('Closing trash modals ...')
     click_button_by_xpath(driver,'//*[@id="didomi-notice-agree-button"]', 1, True)
     click_button_by_xpath(driver, '//*[@id="__BVID__92___BV_modal_body_"]/i', 1, True)
 
 
-    print("[Y2I Robot] Looking for login button ...")
+    log("Looking for login button ...")
     click_button_by_xpath(driver,'//*[@id="__layout"]/div/div[1]/header/div/div/div[2]/div[1]/button[1]', 1)
 
-    print('[Y2I Robot] Filling pass and email ...')
+    log('Filling pass and email ...')
     modalElement = driver.find_element(By.XPATH, f"//div[contains(concat(' ', normalize-space(@class), ' '), ' modal ')]")
     fill_input_by_placeholder(modalElement,'Email', IVX_USERNAME,0)
     fill_input_by_placeholder(modalElement,'Password', IVX_PASS,1)
     click_button_by_xpath(modalElement, "//button[@type='submit' and contains(., 'Log in')]", 5)
 
 def filterDataset(dataset, history):
-    print(f'[Y2I Robot] Filtering dataset before initialize upload process ...')
+    log(f'Filtering dataset before initialize upload process ...')
     filtered_data = []
     for data in dataset:
         if data['link'] in history:

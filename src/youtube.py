@@ -7,6 +7,7 @@ from xml.etree import ElementTree
 
 from setup import DESCRIPTION, YT_CHANNEL_ID, YT_CHANNEL_URLS
 from src.selenium_helper import click_button_by_xpath
+from src.logger import log
 
 # Namespaces dictionary
 NS = {
@@ -16,7 +17,7 @@ NS = {
 }
 
 def get_latest_video_URL():
-    print('[Y2I Robot] Loading webdriver and URL ...')
+    log('Loading webdriver and URL...')
     dataset = []
     driver = webdriver.Chrome()
 
@@ -28,14 +29,14 @@ def get_latest_video_URL():
         click_button_by_xpath(driver, '//button[span[text()="Reject all"]]', 5, True)
 
         try:
-            print('[Y2I Robot] Looking for latest video ...')
+            log('Looking for latest video...')
             video_el = driver.find_element(By.XPATH, '//ytd-rich-grid-media[1]//a[@id="thumbnail"]')
             title_el = video_el.find_element(By.XPATH, '//ytd-rich-grid-media[1]//yt-formatted-string[@id="video-title"]')
             
             url = video_el.get_attribute('href')
             title = title_el.text
 
-            print(f'[Y2I Robot] Video: {title}')
+            log(f'Video: {title}')
             dataset.append({'title': title, 'link': url, 'description': DESCRIPTION})
         except:
             raise Exception(f'[Y2I Robot] Latest video not found for "{url}"!')
@@ -44,7 +45,7 @@ def get_latest_video_URL():
     return dataset
 
 def get_last_15_videos():
-    print('[Y2I Robot] Getting last 15 videos ...')
+    log('Getting last 15 videos...')
     
     # Get RSS
     url = f"https://www.youtube.com/feeds/videos.xml?channel_id={YT_CHANNEL_ID}"

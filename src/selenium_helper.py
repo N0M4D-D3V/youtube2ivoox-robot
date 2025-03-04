@@ -1,15 +1,17 @@
 from time import sleep
 from selenium.webdriver.common.by import By
 
+from src.logger import log
+
 def click_button_by_text(driver, button_text, sleep_time=2, shouldPass = False):
     try:
-        print(f'[Y2I Robot] Looking for "{button_text}" BTN ...')
+        log(f'Looking for "{button_text}" BTN ...')
         el = driver.find_element(By.XPATH, f'//button[contains(., "{button_text}")]')
         el.click()
         sleep(sleep_time)
     except:
         if shouldPass:
-            print('[Y2I Robot] Button not found. Script can continue ...')
+            log('Button not found. Script can continue ...')
             pass
         else:
             driver.quit()
@@ -17,13 +19,13 @@ def click_button_by_text(driver, button_text, sleep_time=2, shouldPass = False):
     
 def click_button_by_xpath(driver, xpath, sleep_time=2, shouldPass=False):
     try:
-        print(f'[Y2I Robot] Looking for "{xpath}" button ...')
+        log(f'Looking for "{xpath}" button ...')
         el = driver.find_element(By.XPATH, xpath)
         el.click();
         sleep(sleep_time)
     except:
         if shouldPass:
-            print('[Y2I Robot] Button not found. Script can continue ...')
+            log('Button not found. Script can continue ...')
             pass
         else:
             driver.quit()

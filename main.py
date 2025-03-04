@@ -1,6 +1,6 @@
 from setup import YT_CHANNEL_ID
 from src.file_operations import remove_files
-from src.logger import print_header
+from src.logger import print_header, log
 from src.ivoox import upload_to_ivoox
 from src.youtube import get_last_15_videos, get_latest_video_URL
 from src.audio_ops import download_audio
@@ -8,11 +8,11 @@ from src.audio_ops import download_audio
 def main():
     videoList = []
     if not YT_CHANNEL_ID:
-        print('[Y2I Robot] Channel ID not provided. Using selenium ...')
+        log('Channel ID not provided. Using selenium...')
         videoList = get_latest_video_URL()
 
     else:
-        print('[Y2I Robot] Channel ID provided. Using XML request ...')
+        log('Channel ID provided. Using XML request...')
         videoList = get_last_15_videos()
 
     if len(videoList) > 0:
