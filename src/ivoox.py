@@ -11,6 +11,10 @@ from src.selenium_helper import check_navigation, click_button_by_text, click_bu
 
 def upload_to_ivoox(dataset):
     history = load_history()
+    filtered_data = filterDataset(dataset, history)
+    if len(filtered_data) == 0:
+        print('[Y2I Robot] All dataset is stored on history.json. Passing upload process...')
+        pass
     
     driver = webdriver.Chrome()
     driver.get(IVX_MAIN_URL)
@@ -18,7 +22,7 @@ def upload_to_ivoox(dataset):
 
     login(driver)
 
-    for data in dataset:
+    for data in filtered_data :
         isUrlInHistory = data['link'] in history;
         if not isUrlInHistory:
             print('[Y2I Robot] This video URL is not stored in history file. Running upload...')
@@ -89,3 +93,12 @@ def login(driver):
     fill_input_by_placeholder(modalElement,'Email', IVX_USERNAME,0)
     fill_input_by_placeholder(modalElement,'Password', IVX_PASS,1)
     click_button_by_xpath(modalElement, "//button[@type='submit' and contains(., 'Log in')]", 5)
+
+def filterDataset(dataset, history):
+    print(f'[Y2I Robot] Filtering dataset before initialize upload process ...')
+    filtered_data = []
+    for data in dataset:
+        if data['link'] in history:
+            filtered_data.append(data)
+
+    return filtered_data
