@@ -1,5 +1,6 @@
 from setup import YT_CHANNEL_ID
 from src.file_operations import remove_files
+from src.history import load_history, filter_by_history
 from src.logger import print_header, log
 from src.ivoox import upload_to_ivoox
 from src.youtube import get_last_15_videos, get_latest_video_URL
@@ -17,11 +18,17 @@ def main():
 
     if len(videoList) > 0:
 
-        for video in videoList:
-            file_name = download_audio(video["link"], video["title"])
-            video["file_name"] = file_name
+        history = load_history()
+        filtered_video_list =  filter_by_history(videoList, history)
+
+        if len(filtered_video_list) == 0:
+            log('All dataset is stored on history.json. Upload not required.')
+        else:
+            for video in filtered_video_list:
+                file_name = download_audio(video["link"], video["title"])
+                video["file_name"] = file_name
         
-        upload_to_ivoox(videoList)
+            upload_to_ivoox(videoList)
         remove_files('./', "*.mp3")
 
 
