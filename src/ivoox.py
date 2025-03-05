@@ -22,53 +22,53 @@ def upload_to_ivoox(dataset):
     for data in dataset :
         isUrlInHistory = data['link'] in history;
         if not isUrlInHistory:
-            log('This video URL is not stored in history file. Running upload...')
+            log('This video URL is not stored in history file. Running upload process...')
             
-            # touch dashboard btn in top menu
-            click_button_by_xpath(driver, '/html/body/div[2]/div/div/div[1]/header/div/div/ul/li[1]/a', shouldPass=True)
-
-            check_navigation(driver, 'dashboard')
-            click_button_by_text(driver, 'Understood', shouldPass=True)
-
-            file_path = os.path.abspath(data['file_name'])
-            click_button_by_xpath(driver, '//*[@id="content"]/div/div[2]/div/div[2]/a', 5)
-        
-            check_navigation(driver, 'upload')
-            click_button_by_text(driver, "Continue")
-
-            # Locate the file input field and upload the file
             try:
-                log('Uploading file ...')
-                _file_input_el = driver.find_element(By.XPATH, '//input[@type="file"]')
-                _file_input_el.send_keys(os.path.abspath(file_path))
-                sleep(100)
+                # touch dashboard btn in top menu
+                click_button_by_xpath(driver, '/html/body/div[2]/div/div/div[1]/header/div/div/ul/li[1]/a', shouldPass=True)
+
+                check_navigation(driver, 'dashboard')
+                click_button_by_text(driver, 'Understood', shouldPass=True)
+
+                file_path = os.path.abspath(data['file_name'])
+                click_button_by_xpath(driver, '//*[@id="content"]/div/div[2]/div/div[2]/a', 5)
+            
+                check_navigation(driver, 'upload')
+                click_button_by_text(driver, "Continue")
+
+                    # Locate the file input field and upload the file
+                    log('Uploading file ...')
+                    _file_input_el = driver.find_element(By.XPATH, '//input[@type="file"]')
+                    _file_input_el.send_keys(os.path.abspath(file_path))
+                    sleep(100)
+            
+                # fill form
+                fill_input_by_xpath(driver, '/html/body/div[2]/div/div/div[2]/div/div[2]/form/div[2]/div[2]/div/div[1]/div/div/div/input', data['title'], 0)
+                fill_input_by_xpath(driver, '/html/body/div[2]/div/div/div[2]/div/div[2]/form/div[2]/div[2]/div/div[2]/div/div/div/textarea', data['description'], 0)
+
+                # Insert TAGS
+                tag_input_xpath = '/html/body/div[2]/div/div/div[2]/div/div[2]/form/div[2]/div[2]/div/div[5]/div/div/div[1]/div[2]/input'
+                for tag in TAGS[:5]:  # Max 5 tags
+                    fill_input_by_xpath(driver, tag_input_xpath, tag, 1)
+                    fill_input_by_xpath(driver, tag_input_xpath, Keys.RETURN, 1)
+
+                sleep(2)
+                click_button_by_text(driver, "Continue",5)
+
+                print('Executing JS.for checkbox clicking..');
+                driver.execute_script('''
+                                    var el = document.getElementById('accept-conditions');
+                                    el.click();
+                                    ''')
+
+                sleep(1)
+                click_button_by_text(driver, "Publish", 10)
+
+                history.append(data['link'])
             except:
                 log('Could not upload the file!')
                 continue
-        
-            # fill form
-            fill_input_by_xpath(driver, '/html/body/div[2]/div/div/div[2]/div/div[2]/form/div[2]/div[2]/div/div[1]/div/div/div/input', data['title'], 0)
-            fill_input_by_xpath(driver, '/html/body/div[2]/div/div/div[2]/div/div[2]/form/div[2]/div[2]/div/div[2]/div/div/div/textarea', data['description'], 0)
-
-            # Insert TAGS
-            tag_input_xpath = '/html/body/div[2]/div/div/div[2]/div/div[2]/form/div[2]/div[2]/div/div[5]/div/div/div[1]/div[2]/input'
-            for tag in TAGS[:5]:  # Max 5 tags
-                fill_input_by_xpath(driver, tag_input_xpath, tag, 1)
-                fill_input_by_xpath(driver, tag_input_xpath, Keys.RETURN, 1)
-
-            sleep(2)
-            click_button_by_text(driver, "Continue",5)
-
-            print('Executing JS.for checkbox clicking..');
-            driver.execute_script('''
-                                var el = document.getElementById('accept-conditions');
-                                el.click();
-                                ''')
-
-            sleep(1)
-            click_button_by_text(driver, "Publish", 10)
-
-            history.append(data['link'])
         else:
             log(f'Video URL stored in history! This video was uploaded previously: {data['title']}')
 
