@@ -37,11 +37,11 @@ def upload_to_ivoox(dataset):
                 check_navigation(driver, 'upload')
                 click_button_by_text(driver, "Continue")
 
-                    # Locate the file input field and upload the file
-                    log('Uploading file ...')
-                    _file_input_el = driver.find_element(By.XPATH, '//input[@type="file"]')
-                    _file_input_el.send_keys(os.path.abspath(file_path))
-                    sleep(100)
+                # Locate the file input field and upload the file
+                log('Uploading file ...')
+                _file_input_el = driver.find_element(By.XPATH, '//input[@type="file"]')
+                _file_input_el.send_keys(os.path.abspath(file_path))
+                sleep(100)
             
                 # fill form
                 fill_input_by_xpath(driver, '/html/body/div[2]/div/div/div[2]/div/div[2]/form/div[2]/div[2]/div/div[1]/div/div/div/input', data['title'], 0)
