@@ -21,6 +21,8 @@ def main():
         history = load_history()
         filtered_video_list =  filter_by_history(videoList, history)
 
+        
+
         if len(filtered_video_list) == 0:
             log('All dataset is stored on history.json. Upload not required.')
         else:

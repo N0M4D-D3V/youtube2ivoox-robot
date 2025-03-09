@@ -74,7 +74,9 @@ def get_last_15_videos():
         print(f"Published: {video['published']}")
         print(f"Updated: {video['updated']}")
         print(f"Link: {video['link']}")
-        print(f"Description: {video['description'][:50]}...")
+
+        if video['description']:
+            print(f"Description: {video['description'][:25]}...")
         print(f'>----------------------------------------\n')
 
     return videos
