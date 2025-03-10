@@ -12,5 +12,12 @@ def download_audio(url: str, title: str) -> str:
         '-o', file_name,
         url
     ]
-    subprocess.run(prompt)
+    try:
+        result = subprocess.run(prompt, check=True)
+        if result.returncode != 0:
+            log(f"Error downloading audio: Command exited with status {result.returncode}")
+    except subprocess.CalledProcessError as e:
+        log(f"Downloading audio failed: {e}")
+        return None
+    
     return file_name
