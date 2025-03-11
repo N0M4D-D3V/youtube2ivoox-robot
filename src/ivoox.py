@@ -1,23 +1,30 @@
+from genericpath import exists
 import os
 
-from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from time import sleep
 
-from setup import IVX_USERNAME, IVX_PASS, IVX_MAIN_URL, TAGS
+from setup import COOKIES_PATH, IVX_USERNAME, IVX_PASS, IVX_MAIN_URL, TAGS
+from src.file_operations import load_cookies, save_cookies
 from src.history import load_history, save_history
 from src.logger import log
-from src.selenium_helper import check_navigation, click_button_by_text, click_button_by_xpath, fill_input_by_placeholder, fill_input_by_xpath
+from src.selenium_helper import check_navigation, click_button_by_text, click_button_by_xpath, fill_input_by_placeholder, fill_input_by_xpath, get_driver_instance
 
 def upload_to_ivoox(dataset):
     history = load_history()
     
-    driver = webdriver.Chrome()
+    driver = get_driver_instance()
     driver.get(IVX_MAIN_URL)
     sleep(5)
 
-    login(driver)
+    cookies_file_exists = exists(COOKIES_PATH)
+    if cookies_file_exists:
+        driver = load_cookies(driver)
+        driver.refresh()
+    else:
+        login(driver)
+        save_cookies(driver)
 
     for data in dataset :
         isUrlInHistory = data['link'] in history;

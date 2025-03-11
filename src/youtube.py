@@ -1,4 +1,3 @@
-from selenium import webdriver
 from selenium.webdriver.common.by import By
 from time import sleep
 
@@ -6,7 +5,7 @@ import urllib.request
 from xml.etree import ElementTree
 
 from setup import DESCRIPTION, YT_CHANNEL_ID, YT_CHANNEL_URLS
-from src.selenium_helper import click_button_by_xpath
+from src.selenium_helper import click_button_by_xpath, get_driver_instance
 from src.logger import log
 
 # Namespaces dictionary
@@ -19,7 +18,7 @@ NS = {
 def get_latest_video_URL():
     log('Loading webdriver and URL...')
     dataset = []
-    driver = webdriver.Chrome()
+    driver = get_driver_instance()
 
     for channel in YT_CHANNEL_URLS:
 
