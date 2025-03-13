@@ -28,7 +28,7 @@ def save_cookies(driver):
 
 def load_cookies(driver):
     log('Loading cookies ...')
-    with open("cookies.pkl", "rb") as file:
+    with open(COOKIES_PATH, "rb") as file:
         cookies = pickle.load(file)
         for cookie in cookies:
             driver.add_cookie(cookie)

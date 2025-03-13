@@ -18,13 +18,13 @@ def upload_to_ivoox(dataset):
     driver.get(IVX_MAIN_URL)
     sleep(5)
 
-    cookies_file_exists = exists(COOKIES_PATH)
-    if cookies_file_exists:
-        driver = load_cookies(driver)
-        driver.refresh()
-    else:
-        login(driver)
-        save_cookies(driver)
+    # cookies_file_exists = exists(COOKIES_PATH)
+    # if cookies_file_exists:
+    #     driver = load_cookies(driver)
+    #     driver.refresh()
+    # else:
+    login(driver)
+    #save_cookies(driver)
 
     for data in dataset :
         isUrlInHistory = data['link'] in history;
