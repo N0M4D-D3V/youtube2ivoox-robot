@@ -37,6 +37,25 @@ def click_button_by_text(driver, button_text, sleep_time=2, shouldPass = False):
         else:
             driver.quit()
             raise Exception(f'[Y2I Robot] Button {button_text} not found!')
+
+def click_button_when_available(driver, btn_txt, sleep_time=2):
+    isAvailable = False
+
+    while isAvailable == False :
+        random_sleeptime = random_number(sleep_time, sleep_time+3)
+
+        try:
+            log(f'Click "{btn_txt}" button...')
+            el = driver.find_element(By.XPATH, f'//button[contains(., "{btn_txt}")]')
+            el.click()
+            isAvailable = True
+        except:
+            log(f'Click "{btn_txt}" not found. Trying again...')
+            isAvailable = False
+            pass
+
+        sleep(random_sleeptime)
+
     
 def click_button_by_xpath(driver, xpath, sleep_time=2, shouldPass=False):
     random_sleeptime = random_number(sleep_time, sleep_time+3)

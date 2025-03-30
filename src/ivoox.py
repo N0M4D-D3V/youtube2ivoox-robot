@@ -5,11 +5,11 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from time import sleep
 
-from setup import COOKIES_PATH, IVX_USERNAME, IVX_PASS, IVX_MAIN_URL, TAGS
+from setup import IVX_USERNAME, IVX_PASS, IVX_MAIN_URL, TAGS
 from src.file_operations import load_cookies, save_cookies
 from src.history import load_history, save_history
 from src.logger import log
-from src.selenium_helper import check_navigation, click_button_by_text, click_button_by_xpath, fill_input_by_placeholder, fill_input_by_xpath, get_driver_instance
+from src.selenium_helper import check_navigation, click_button_by_text, click_button_by_xpath, fill_input_by_placeholder, fill_input_by_xpath, get_driver_instance, click_button_when_available
 
 def upload_to_ivoox(dataset):
     history = load_history()
@@ -48,7 +48,7 @@ def upload_to_ivoox(dataset):
                 log('Uploading file ...')
                 _file_input_el = driver.find_element(By.XPATH, '//input[@type="file"]')
                 _file_input_el.send_keys(os.path.abspath(file_path))
-                sleep(100)
+                sleep(2)
             
                 # fill form
                 fill_input_by_xpath(driver, '/html/body/div[2]/div/div/div[2]/div/div[2]/form/div[2]/div[2]/div/div[1]/div/div/div/input', data['title'], 0)
@@ -61,7 +61,7 @@ def upload_to_ivoox(dataset):
                     fill_input_by_xpath(driver, tag_input_xpath, Keys.RETURN, 1)
 
                 sleep(2)
-                click_button_by_text(driver, "Continue",5)
+                click_button_when_available(driver, "Continue",5)
 
                 print('Executing JS.for checkbox clicking..');
                 driver.execute_script('''
