@@ -1,4 +1,4 @@
-from setup import YT_CHANNEL_ID
+from setup import YT_CHANNEL_ID, REMOVE_MP3_FILES
 from src.file_operations import remove_files
 from src.history import load_history, filter_by_history
 from src.logger import print_header, log
@@ -31,7 +31,10 @@ def main():
                 video["file_name"] = file_name
         
             upload_to_ivoox(videoList)
-        remove_files('./', "*.mp3")
+        
+        if REMOVE_MP3_FILES:
+            remove_files('./', "*.mp3")
+
 
 
 if __name__ == "__main__":
