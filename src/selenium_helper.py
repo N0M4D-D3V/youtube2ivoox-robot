@@ -10,7 +10,12 @@ from src.utils import random_number
 
 def get_driver_instance():
     log('Getting web driver instance (Chrome)...')
-    user_agent = random.choice(USER_AGENTS)
+
+    # clear the current agent for retry if it fails
+    position = random.choice(range(len(USER_AGENTS)))
+    user_agent = USER_AGENTS[position]
+    del USER_AGENTS[position]
+
 
     log(f'Selected agent: {user_agent}')
     options = webdriver.ChromeOptions()

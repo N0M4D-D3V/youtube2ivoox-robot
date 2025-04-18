@@ -25,6 +25,26 @@ def upload_to_ivoox(dataset):
     # else:
     login(driver)
     #save_cookies(driver)
+    is_useragent_ok = False
+
+    # check if useragent was valid or not
+    # if not, retry with new one
+    log("Checking if user agent is valid...")
+    while not is_useragent_ok:
+        try:
+            check_navigation(driver, 'dashboard')
+            is_useragent_ok = True
+            log('Valid user agent! Execution can continue =)')
+        except:
+            log('Invalid user agent. Trying new one ...')
+            is_useragent_ok = False
+            driver = get_driver_instance()
+            driver.get(IVX_MAIN_URL)
+            sleep(5)
+            login(driver)
+
+
+
 
     for data in dataset :
         isUrlInHistory = data['link'] in history;
