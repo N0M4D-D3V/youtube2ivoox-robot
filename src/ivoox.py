@@ -5,7 +5,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from time import sleep
 
-from setup import IVX_USERNAME, IVX_PASS, IVX_MAIN_URL, TAGS
+from setup import DESCRIPTION, IVX_USERNAME, IVX_PASS, IVX_MAIN_URL, TAGS
 from src.file_operations import load_cookies, save_cookies
 from src.history import load_history, save_history
 from src.logger import log
@@ -71,8 +71,10 @@ def upload_to_ivoox(dataset):
                 sleep(2)
             
                 # fill form
-                fill_input_by_xpath(driver, '/html/body/div[2]/div/div/div[2]/div/div[2]/form/div[2]/div[2]/div/div[1]/div/div/div/input', data['title'], 0)
-                fill_input_by_xpath(driver, '/html/body/div[2]/div/div/div[2]/div/div[2]/form/div[2]/div[2]/div/div[2]/div/div/div/textarea', data['description'], 0)
+                title = data.get('title')
+                description = data.get('description') or DESCRIPTION 
+                fill_input_by_xpath(driver, '/html/body/div[2]/div/div/div[2]/div/div[2]/form/div[2]/div[2]/div/div[1]/div/div/div/input', title, 0)
+                fill_input_by_xpath(driver, '/html/body/div[2]/div/div/div[2]/div/div[2]/form/div[2]/div[2]/div/div[2]/div/div/div/textarea', description, 0)
 
                 # Insert TAGS
                 tag_input_xpath = '/html/body/div[2]/div/div/div[2]/div/div[2]/form/div[2]/div[2]/div/div[5]/div/div/div[1]/div[2]/input'
@@ -83,7 +85,7 @@ def upload_to_ivoox(dataset):
                 sleep(2)
                 click_button_when_available(driver, "Continue",5)
 
-                print('Executing JS.for checkbox clicking..');
+                log('Executing JS for checkbox clicking..');
                 driver.execute_script('''
                                     var el = document.getElementById('accept-conditions');
                                     el.click();
@@ -92,12 +94,14 @@ def upload_to_ivoox(dataset):
                 sleep(1)
                 click_button_by_text(driver, "Publish", 10)
 
-                history.append(data['link'])
+                history.append(data.get('link'))
+                continue
             except:
                 log('Could not upload the file!')
                 continue
         else:
             log(f'Video URL stored in history! This video was uploaded previously: {data['title']}')
+            continue
 
     driver.quit()
     save_history(history)
