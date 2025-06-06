@@ -1,8 +1,12 @@
 from time import sleep
 import random
+import tempfile
+import os
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
 
 from setup import USER_AGENTS
 from src.logger import log
@@ -21,10 +25,27 @@ def get_driver_instance():
     options = webdriver.ChromeOptions()
     options.add_argument(f'--user-agent={user_agent}')
     options.add_argument("--disable-blink-features=AutomationControlled")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--disable-gpu")
+    options.add_argument("--disable-extensions")
+    options.add_argument("--disable-plugins")
+    options.add_argument("--disable-images")
     options.add_experimental_option("excludeSwitches", ["enable-automation"])
     options.add_experimental_option('useAutomationExtension', False)
+    
+    # Create a unique user data directory to avoid conflicts
+    temp_dir = tempfile.mkdtemp()
+    options.add_argument(f"--user-data-dir={temp_dir}")
 
-    return webdriver.Chrome(options=options)
+    # Generate a unique debugging port to avoid conflicts
+    debug_port = random.randint(9000, 9999)
+    options.add_argument(f"--remote-debugging-port={debug_port}")
+    
+    # Use webdriver-manager to automatically handle ChromeDriver
+    service = Service(ChromeDriverManager().install())
+    
+    return webdriver.Chrome(service=service, options=options)
 
 
 def click_button_by_text(driver, button_text, sleep_time=2, shouldPass = False):
